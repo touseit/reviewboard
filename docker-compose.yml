@@ -8,21 +8,33 @@
 #    volumes:
 #         - /home/reviewboard/database:/var/lib/postgresql/data
 
+#database:
+#    image: mysql:5.7
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=reviewboard
+#      - MYSQL_USER=reviewboard
+#      - MYSQL_PASSWORD=reviewboard
+#      - MYSQL_DATABASE=reviewboard
+#   volumes:
+#        - /home/reviewboard/database:/var/lib/mysql
+
 database:
-    image: mysql
+    image: postgres
     environment:
-      - MYSQL_ROOT_PASSWORD=reviewboard
-      - MYSQL_USER=reviewboard
-      - MYSQL_PASSWORD=reviewboard
-      - MYSQL_DATABASE=reviewboard
+       - POSTGRES_USER=reviewboard
+       - POSTGRES_PASSWORD=reviewboard
+
     volumes:
-        - /home/reviewboard/database:/var/lib/mysql
+         - /home/reviewboard/database_postgresql:/var/lib/postgresql/data
 
 cache:
     image: memcached
 
 reviewboard:
     image: ducatel/reviewboard
+    environment:
+       - DB_TYPE=postgresql
+       - DB_PORT=5432
     links:
         - "cache:memcached"
         - "database:rb_db"

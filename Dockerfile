@@ -1,7 +1,9 @@
 FROM ubuntu:18.04
 
+RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+RUN apt-get clean
 RUN apt-get update && \
-    apt-get install -y python-pip git-core python-dev python-svn python-mysqldb libssl-dev libffi-dev uwsgi libpq-dev wget uwsgi-plugin-python && \
+    apt-get install -y python-pip git-core python-dev python-svn python-mysqldb libssl-dev libffi-dev uwsgi libpq-dev wget uwsgi-plugin-python inetutils-ping vim && \
     apt-get clean
 
 ARG dockerize_version=0.6.1
@@ -9,12 +11,13 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/v${dockerize_ver
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v${dockerize_version}.tar.gz && \
     rm dockerize-linux-amd64-v${dockerize_version}.tar.gz
 
-RUN pip install --upgrade pip
-RUN pip install -U setuptools cryptography python-memcached psycopg2
+ARG pip_source=https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install -i ${pip_source} --upgrade pip
+RUN pip install -i ${pip_source} -U setuptools cryptography python-memcached psycopg2
 
 ARG reviewboard_version=3.0.14 
 ARG rbtools_version=1.0.1
-RUN pip install -U ReviewBoard==$reviewboard_version RBTools==$rbtools_version
+RUN pip install -i ${pip_source} -U ReviewBoard==$reviewboard_version RBTools==$rbtools_version
 
 VOLUME "/media"
 VOLUME "/var/www"

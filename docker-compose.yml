@@ -23,9 +23,8 @@ database:
     environment:
        - POSTGRES_USER=reviewboard
        - POSTGRES_PASSWORD=reviewboard
-
     volumes:
-         - /home/reviewboard/database_postgresql:/var/lib/postgresql/data
+       - postgresql-data:/var/lib/postgresql/data
 
 cache:
     image: memcached
@@ -41,4 +40,4 @@ reviewboard:
     ports:
         - "8000:8000"
     volumes:
-        - /home/reviewboard/media:/media
+        - media-data:/media
